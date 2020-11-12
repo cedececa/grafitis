@@ -1,10 +1,9 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { CommonEntity } from './common.entity'
 import { UsuarioEntity } from './usuario.entity'
 
 @Entity('perfil')
-export class PerfilEntity {
-  @PrimaryGeneratedColumn()
-  id: number
+export class PerfilEntity extends CommonEntity {
   @OneToOne((type) => UsuarioEntity, (usuario) => usuario.perfil, {
     nullable: true,
     cascade: true,

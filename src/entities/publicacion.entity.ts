@@ -7,15 +7,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { ComentarioEntity } from './comentario.entity'
+import { CommonEntity } from './common.entity'
 import { FotoEntity } from './foto.entity'
 import { UsuarioEntity } from './usuario.entity'
 import { ValoracionEntity } from './valoracion.entity'
 
 @Entity('publicacion')
-export class PublicacionEntity {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class PublicacionEntity extends CommonEntity {
   @CreateDateColumn()
   fecha: Date
 

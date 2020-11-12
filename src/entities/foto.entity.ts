@@ -1,11 +1,9 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { CommonEntity } from './common.entity'
 import { PublicacionEntity } from './publicacion.entity'
 
 @Entity('foto')
-export class FotoEntity {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class FotoEntity extends CommonEntity {
   @Column()
   url: string
 
