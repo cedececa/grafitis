@@ -1,12 +1,10 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { CommonEntity } from './common.entity'
 import { PublicacionEntity } from './publicacion.entity'
 import { UsuarioEntity } from './usuario.entity'
 
 @Entity('comentario')
-export class ComentarioEntity {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class ComentarioEntity extends CommonEntity {
   @Column({ nullable: true })
   contenido: string
 
