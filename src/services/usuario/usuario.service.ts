@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { PublicacionEntity } from 'src/entities/publicacion.entity'
 import { UsuarioEntity } from 'src/entities/usuario.entity'
 import { Repository } from 'typeorm'
 import { CommonService } from '../common.service'
@@ -9,32 +10,101 @@ export class UsuarioService extends CommonService<UsuarioEntity> {
   constructor(
     @InjectRepository(UsuarioEntity)
     repo: Repository<UsuarioEntity>,
+    @InjectRepository(PublicacionEntity)
+    private readonly repoPublicacion: Repository<PublicacionEntity>,
   ) {
     super(repo, 'usuario')
   }
-  /* 
-  async create(createInput: UsuarioEntity) {
-    return await this.repo.save(createInput)
+
+  async createNewGrafitis(idUsuario: number, createInput: PublicacionEntity) {
+    //const usuario = await this.findOneById(idUsuario)
+    const usuario = await this.repo.findOne({
+      where: { id: idUsuario },
+      select: ['id'], // seleccionamos los campos que devuelve para evitar dato grande
+    })
+    createInput.usuario = usuario
+    return await this.repoPublicacion.save(createInput)
   }
-  async update(id: number, updateInput: UsuarioEntity) {
-    const existing = await this.findOneById(id)
-    if (updateInput) updateInput.id = existing.id
-    return await this.repo.save(updateInput)
+
+  async updateOneGrafitis(
+    idUsuario: number,
+    idPublicacion: number,
+    updateObject: PublicacionEntity,
+  ) {
+    //const usuario = await this.findOneById(idUsuario)
+    let publicacion: PublicacionEntity = undefined
+    publicacion = await this.repoPublicacion.findOne({
+      where: { id: idPublicacion },
+      select: ['id'], // seleccionamos los campos que devuelve para evitar dato grande
+      relations: ['usuario'],
+    })
+
+    // si es del usuario loguequado
+    let result = null
+    let r = false
+    if (
+      publicacion !== undefined &&
+      publicacion.usuario !== undefined &&
+      publicacion.usuario.id == idUsuario // cuidado con la comparacion.
+    ) {
+      result = await this.repoPublicacion.update(idPublicacion, updateObject)
+    }
+
+    if (result !== null && result.affected > 0) {
+      r = true
+    }
+
+    return r
   }
-  async remove(id: number) {
-    const existing = await this.findOneById(id)
-    return await this.repo.remove(existing)
+
+  async deleteOneGrafitis(idUsuario: number, idPublicacion: number) {
+    //const usuario = await this.findOneById(idUsuario)
+    let publicacion: PublicacionEntity = undefined
+    publicacion = await this.repoPublicacion.findOne({
+      where: { id: idPublicacion },
+      select: ['id'], // seleccionamos los campos que devuelve para evitar dato grande
+      relations: ['usuario'],
+    })
+
+    // aqui deberia cambiar posteriormente porque deberia comparar el id de usuario logqueado
+    // para hacer esto, habria que haber implementado auth.
+    let result = null
+    let deleted = false
+    if (
+      publicacion !== undefined &&
+      publicacion.usuario !== undefined &&
+      publicacion.usuario.id == idUsuario // cuidado con la comparacion.
+    ) {
+      result = await this.repoPublicacion.remove(publicacion)
+    }
+
+    if (result !== null) {
+      deleted = true
+    }
+
+    return deleted
   }
-  async findOneById(id: number): Promise<UsuarioEntity> {
-    const existing = await this.repo.findOne(id)
-    if (!existing)
-      throw new HttpException(
-        `Failed, the ${name} with ${id} does not exist`,
-        404,
-      )
-    return existing
+
+  async exists(idEntity: number): Promise<UsuarioEntity> {
+    return await this.repo.findOne({
+      where: { id: idEntity },
+      select: ['id'], // seleccionamos los campos que devuelve para evitar dato grande
+    })
   }
-  async findAll(): Promise<UsuarioEntity[]> {
-    return await this.repo.find()
-  } */
+
+  async getOneGrafitis(idUsuario: number, idPublicacion: number) {
+    const queryBuilder = this.repoPublicacion.createQueryBuilder('publicacion')
+    return await queryBuilder
+
+      .leftJoin('publicacion.usuario', 'usuario')
+      .where('publicacion.id = :idPublicacion', {
+        idPublicacion,
+      })
+      .andWhere('usuario.Id = :idUsuario', {
+        idUsuario,
+      })
+      //selecionamos los datos que queremos
+      .select(['usuario.id', 'publicacion'])
+      .getOne()
+  }
 }

@@ -3,7 +3,7 @@ import { Repository } from 'typeorm'
 
 export class CommonService<T> {
   private name: string
-  private repo: Repository<T>
+  repo: Repository<T>
   constructor(repo: Repository<T>, name: string) {
     this.repo = repo
     this.name = name
