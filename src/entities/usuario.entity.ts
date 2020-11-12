@@ -6,15 +6,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { ComentarioEntity } from './comentario.entity'
+import { CommonEntity } from './common.entity'
 import { PerfilEntity } from './perfil.entity'
 import { PublicacionEntity } from './publicacion.entity'
 import { ValoracionEntity } from './valoracion.entity'
 
 @Entity('usuario')
-export class UsuarioEntity {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class UsuarioEntity extends CommonEntity {
   @Column({ nullable: true })
   role: string
   @Column()

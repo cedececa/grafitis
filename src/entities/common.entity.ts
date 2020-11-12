@@ -2,6 +2,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
   CreateDateColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 
@@ -21,4 +22,7 @@ export class CommonEntity {
 
   @UpdateDateColumn()
   updatedAt: Date
+
+  @PrimaryGeneratedColumn()
+  id: number
 }
