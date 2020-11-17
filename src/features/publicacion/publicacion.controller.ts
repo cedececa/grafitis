@@ -1,6 +1,6 @@
 import { Controller, Inject } from '@nestjs/common'
-import { PublicacionEntity } from 'src/entities/Publicacion.entity'
-import { PublicacionService } from 'src/services/Publicacion/Publicacion.service'
+import { PublicacionEntity } from 'src/entities/publicacion.entity'
+import { PublicacionService } from 'src/services/publicacion/publicacion.service'
 import { CommonController } from '../common.controller'
 
 const name = 'Publicacion'
