@@ -12,4 +12,16 @@ export class PerfilService extends CommonService<PerfilEntity> {
   ) {
     super(repo, 'perfil')
   }
+
+  async findOneByIdUsuario(idUsuario: number) {
+    const queryBuilder = this.repo.createQueryBuilder('perfil')
+    return await queryBuilder
+      .leftJoin('perfil.usuario', 'usuario')
+      .where('usuario.id = :idUsuario', {
+        idUsuario,
+      })
+      //selecionamos los datos que queremos
+      .select(['usuario.id', 'perfil'])
+      .getOne()
+  }
 }

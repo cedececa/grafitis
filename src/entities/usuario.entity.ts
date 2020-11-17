@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm'
 import { ComentarioEntity } from './comentario.entity'
 import { CommonEntity } from './common.entity'
 import { PerfilEntity } from './perfil.entity'
@@ -21,22 +15,23 @@ export class UsuarioEntity extends CommonEntity {
   correo: string
 
   // Relaciones
-  @OneToOne((type) => PerfilEntity, (perfil) => perfil.usuaro, {
+  @OneToOne(() => PerfilEntity, (perfil) => perfil.usuario, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn()
   perfil: PerfilEntity
 
-  @OneToMany((type) => ValoracionEntity, (valoracion) => valoracion.usuario, {
+  @OneToMany(() => ValoracionEntity, (valoracion) => valoracion.usuario, {
     nullable: true,
   })
   valoraciones: ValoracionEntity[]
 
-  @OneToMany((type) => ComentarioEntity, (c) => c.usuario, {
+  @OneToMany(() => ComentarioEntity, (c) => c.usuario, {
     nullable: true,
   })
   comentarios: ComentarioEntity[]
 
-  @OneToMany((type) => PublicacionEntity, (p) => p.usuario, {
+  @OneToMany(() => PublicacionEntity, (p) => p.usuario, {
     nullable: true,
   })
   publicaciones: PublicacionEntity[]

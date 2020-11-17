@@ -3,10 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
 import { UsuarioEntity } from 'src/entities/usuario.entity'
 import { UsuarioService } from 'src/services/usuario/usuario.service'
+import { PerfilModule } from '../perfil/perfil.module'
 import { UsuarioController } from './usuario.controller'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsuarioEntity, PublicacionEntity])],
+  imports: [
+    TypeOrmModule.forFeature([UsuarioEntity, PublicacionEntity]),
+    PerfilModule,
+  ],
   controllers: [UsuarioController],
   providers: [UsuarioService],
   exports: [UsuarioService],

@@ -13,6 +13,7 @@ import { UsuarioEntity } from 'src/entities/usuario.entity'
 import { UsuarioService } from 'src/services/usuario/usuario.service'
 import { CommonController } from '../common.controller'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
+import { PerfilService } from 'src/services/perfil/perfil.service'
 
 const name = 'usuario'
 @Controller(name)
@@ -20,7 +21,10 @@ export class UsuarioController extends CommonController<
   UsuarioEntity,
   UsuarioService
 > {
-  constructor(@Inject(UsuarioService) service: UsuarioService) {
+  constructor(
+    @Inject(UsuarioService) service: UsuarioService,
+    @Inject(PerfilService) private servicePerfil: PerfilService,
+  ) {
     super(service, name)
   }
   @Post(':idUsuario/grafitis')
@@ -76,6 +80,19 @@ export class UsuarioController extends CommonController<
     @Param('idGrafitis') idGrafitis: number,
   ): Promise<Result> {
     const r = await this.service.getOneGrafitis(idUsuario, idGrafitis)
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+    }
+  }
+
+  // Perfil
+  @Get(':idUsuario/perfil')
+  async getPerfilUsuario(
+    @Param('idUsuario') idUsuario: number,
+  ): Promise<Result> {
+    const r = await this.servicePerfil.findOneByIdUsuario(idUsuario)
     return {
       code: r ? 200 : 204,
       message: '',
