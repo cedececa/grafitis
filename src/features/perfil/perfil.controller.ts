@@ -1,6 +1,6 @@
 import { Controller, Inject } from '@nestjs/common'
-import { PerfilEntity } from 'src/entities/Perfil.entity'
-import { PerfilService } from 'src/services/Perfil/Perfil.service'
+import { PerfilEntity } from 'src/entities/perfil.entity'
+import { PerfilService } from 'src/services/perfil/perfil.service'
 import { CommonController } from '../common.controller'
 
 const name = 'Perfil'
