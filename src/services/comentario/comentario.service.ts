@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ComentarioEntity } from 'src/entities/Comentario.entity'
+import { ComentarioEntity } from 'src/entities/comentario.entity'
 import { Repository } from 'typeorm'
 import { CommonService } from '../common.service'
 

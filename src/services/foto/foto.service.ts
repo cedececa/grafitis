@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FotoEntity } from 'src/entities/Foto.entity'
+import { FotoEntity } from 'src/entities/foto.entity'
 import { Repository } from 'typeorm'
 import { CommonService } from '../common.service'
 
