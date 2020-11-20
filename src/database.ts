@@ -9,6 +9,6 @@ export default TypeOrmModule.forRoot({
   password: 'Zx171260225!',
   database: 'grafitis',
   entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
-  synchronize: true,
+  synchronize: false,
   logger: 'debug',
 })
