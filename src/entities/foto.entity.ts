@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToOne } from 'typeorm'
 import { CommonEntity } from './common.entity'
 import { PublicacionEntity } from './publicacion.entity'
 
@@ -7,7 +7,7 @@ export class FotoEntity extends CommonEntity {
   @Column()
   url: string
 
-  @ManyToOne((type) => PublicacionEntity, (p) => p.foto, {
+  @ManyToOne(() => PublicacionEntity, (p) => p.fotos, {
     nullable: true,
     onDelete: 'CASCADE',
   })

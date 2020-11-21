@@ -1,6 +1,6 @@
 import { Controller, Inject } from '@nestjs/common'
-import { PerfilEntity } from 'src/entities/Perfil.entity'
-import { PerfilService } from 'src/services/Perfil/Perfil.service'
+import { PerfilEntity } from 'src/entities/perfil.entity'
+import { PerfilService } from 'src/services/perfil/perfil.service'
 import { CommonController } from '../common.controller'
 
 const name = 'Perfil'
@@ -9,7 +9,7 @@ export class PerfilController extends CommonController<
   PerfilEntity,
   PerfilService
 > {
-  constructor(@Inject(PerfilService) service: PerfilService) {
-    super(service, name)
+  constructor(@Inject(PerfilService) private perfilService: PerfilService) {
+    super(perfilService, name)
   }
 }

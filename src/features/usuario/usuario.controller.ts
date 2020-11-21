@@ -13,6 +13,8 @@ import { UsuarioEntity } from 'src/entities/usuario.entity'
 import { UsuarioService } from 'src/services/usuario/usuario.service'
 import { CommonController } from '../common.controller'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
+import { PerfilService } from 'src/services/perfil/perfil.service'
+import { PerfilEntity } from 'src/entities/perfil.entity'
 
 const name = 'usuario'
 @Controller(name)
@@ -20,18 +22,36 @@ export class UsuarioController extends CommonController<
   UsuarioEntity,
   UsuarioService
 > {
-  constructor(@Inject(UsuarioService) service: UsuarioService) {
-    super(service, name)
+  constructor(
+    @Inject(UsuarioService) private usuarioService: UsuarioService,
+    @Inject(PerfilService) private servicePerfil: PerfilService,
+  ) {
+    super(usuarioService, name)
   }
+  /* 
+  Example - override
+  @Post() // overrides the base method
+  async save(@Body() createInput: UsuarioEntity): Promise<Result> {
+    const r = await this.usuarioService.insert(createInput)
+    return {
+      code: 200,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
+    }
+  } */
+
   @Post(':idUsuario/grafitis')
   async createNewGrafitis(
     @Param('idUsuario') id: number,
     @Body() createInput: PublicacionEntity,
   ): Promise<Result> {
+    const created = await this.usuarioService.createNewGrafitis(id, createInput)
     return {
       code: 200,
-      message: `This ${name} is created successfully`,
-      data: await this.service.createNewGrafitis(id, createInput),
+      message: '',
+      data: created,
+      succeed: created ? true : false,
     }
   }
 
@@ -40,13 +60,12 @@ export class UsuarioController extends CommonController<
     @Param('idUsuario') idUsuario: number,
     @Param('idGrafitis') idGrafitis: number,
   ): Promise<Result> {
-    const r = await this.service.deleteOneGrafitis(idUsuario, idGrafitis)
+    const r = await this.usuarioService.deleteOneGrafitis(idUsuario, idGrafitis)
     return {
       code: r ? 200 : 204,
-      message: r
-        ? `This ${name} is deleted successfully.`
-        : `This ${name} does't exist.`,
+      message: '',
       data: r,
+      succeed: r ? true : false,
     }
   }
 
@@ -56,17 +75,16 @@ export class UsuarioController extends CommonController<
     @Param('idGrafitis') idGrafitis: number,
     @Body() updateObject: PublicacionEntity,
   ): Promise<Result> {
-    const r = await this.service.updateOneGrafitis(
+    const r = await this.usuarioService.updateOneGrafitis(
       idUsuario,
       idGrafitis,
       updateObject,
     )
     return {
       code: r ? 200 : 204,
-      message: r
-        ? `This ${name} is updated successfully.`
-        : `Update operation is failed. Try it later.`,
+      message: '',
       data: r,
+      succeed: r ? true : false,
     }
   }
 
@@ -75,11 +93,44 @@ export class UsuarioController extends CommonController<
     @Param('idUsuario') idUsuario: number,
     @Param('idGrafitis') idGrafitis: number,
   ): Promise<Result> {
-    const r = await this.service.getOneGrafitis(idUsuario, idGrafitis)
+    const r = await this.usuarioService.getOneGrafitis(idUsuario, idGrafitis)
     return {
       code: r ? 200 : 204,
       message: '',
       data: r,
+      succeed: r ? true : false,
+    }
+  }
+
+  // Perfil
+  @Get(':idUsuario/perfil')
+  async getPerfilUsuario(
+    @Param('idUsuario') idUsuario: number,
+  ): Promise<Result> {
+    const r = await this.servicePerfil.findOneByIdUsuario(idUsuario)
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+      succeed: r ? true : false, // si r != undefined, le asigna true.
+    }
+  }
+
+  // Perfil
+  @Put(':idUsuario/perfil')
+  async modifyPerfilUsuario(
+    @Param('idUsuario') idUsuario: number,
+    @Body() updateObject: PerfilEntity,
+  ): Promise<Result> {
+    const r = await this.servicePerfil.updateOneByIdUsuario(
+      idUsuario,
+      updateObject,
+    )
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
     }
   }
 }

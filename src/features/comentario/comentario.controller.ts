@@ -1,6 +1,6 @@
 import { Controller, Inject } from '@nestjs/common'
-import { ComentarioEntity } from 'src/entities/Comentario.entity'
-import { ComentarioService } from 'src/services/Comentario/Comentario.service'
+import { ComentarioEntity } from 'src/entities/comentario.entity'
+import { ComentarioService } from 'src/services/comentario/comentario.service'
 import { CommonController } from '../common.controller'
 
 const name = 'Comentario'
@@ -9,7 +9,9 @@ export class ComentarioController extends CommonController<
   ComentarioEntity,
   ComentarioService
 > {
-  constructor(@Inject(ComentarioService) service: ComentarioService) {
-    super(service, name)
+  constructor(
+    @Inject(ComentarioService) private comentarioService: ComentarioService,
+  ) {
+    super(comentarioService, name)
   }
 }

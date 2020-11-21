@@ -8,12 +8,13 @@ export class ComentarioEntity extends CommonEntity {
   @Column({ nullable: true })
   contenido: string
 
-  @ManyToOne((type) => UsuarioEntity, (u) => u.comentarios, {
+  @ManyToOne(() => UsuarioEntity, (u) => u.comentarios, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   usuario: UsuarioEntity
 
-  @ManyToOne((type) => PublicacionEntity, (p) => p.comentarios, {
+  @ManyToOne(() => PublicacionEntity, (p) => p.comentarios, {
     nullable: true,
   })
   publicacion: PublicacionEntity

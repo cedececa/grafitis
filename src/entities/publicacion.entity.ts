@@ -29,23 +29,30 @@ export class PublicacionEntity extends CommonEntity {
   @Column({ nullable: true })
   autor: string
 
-  @ManyToOne((type) => UsuarioEntity, (u) => u.publicaciones, {
+  @Column({ nullable: true })
+  valoracoinMedia: string
+  // cada vez un usuario pone una nota para esta publicacion, se hace la media con el valor anterior y el nuevo.
+  // para evitar calculos innecesarios (evitar el calculo de la media aritmetica de las valoraciones)
+  // Ojo, en este caso se pierde la precision
+
+  @ManyToOne(() => UsuarioEntity, (u) => u.publicaciones, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   usuario: UsuarioEntity
 
-  @OneToMany((type) => ValoracionEntity, (v) => v.publicacion, {
+  @OneToMany(() => ValoracionEntity, (v) => v.publicacion, {
     nullable: true,
   })
   valoraciones: ValoracionEntity[]
 
-  @OneToMany((type) => ComentarioEntity, (c) => c.publicacion, {
+  @OneToMany(() => ComentarioEntity, (c) => c.publicacion, {
     nullable: true,
   })
   comentarios: ComentarioEntity[]
 
-  @OneToMany((type) => FotoEntity, (f) => f.publicacion, {
+  @OneToMany(() => FotoEntity, (f) => f.publicacion, {
     nullable: true,
   })
-  foto: FotoEntity[]
+  fotos: FotoEntity[]
 }

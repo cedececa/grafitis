@@ -1,5 +1,6 @@
 export interface Result {
   code: number
-  message: string
+  message?: string
   data?: any
+  succeed: any
 }
