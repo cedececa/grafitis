@@ -9,7 +9,9 @@ export class ValoracionController extends CommonController<
   ValoracionEntity,
   ValoracionService
 > {
-  constructor(@Inject(ValoracionService) service: ValoracionService) {
-    super(service, name)
+  constructor(
+    @Inject(ValoracionService) private valoracionService: ValoracionService,
+  ) {
+    super(valoracionService, name)
   }
 }
