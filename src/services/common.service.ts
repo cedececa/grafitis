@@ -1,4 +1,3 @@
-import { HttpException } from '@nestjs/common'
 import { Repository } from 'typeorm'
 
 export class CommonService<T> {
@@ -9,24 +8,41 @@ export class CommonService<T> {
     this.name = name
   }
 
-  async create(createInput: T) {
-    return await this.repo.save(createInput)
+  async save(createInput: T) {
+    try {
+      return await this.repo.save(createInput)
+    } catch (error) {
+      return undefined
+    }
+  }
+  async insert(newInput: T) {
+    const r = await this.repo.insert(newInput)
+    if (r.identifiers.length > 0) {
+      return true
+    } else {
+      return false
+    }
   }
   async update(id: number, updateInput: T) {
-    await this.findOneById(id)
-    return await this.repo.save(updateInput)
+    const r = await this.repo.update(id, updateInput)
+    if (r.affected > 0) {
+      return true
+    } else {
+      return false
+    }
   }
-  async remove(id: number) {
-    const existing = await this.findOneById(id)
-    return await this.repo.remove(existing)
+  async delete(id: number) {
+    // https://stackoverflow.com/questions/54246615/what-s-the-difference-between-remove-and-delete
+    const r = await this.repo.delete(id)
+    if (r.affected > 0) {
+      return true
+    } else {
+      return false
+    }
   }
+
   async findOneById(id: number): Promise<T> {
     const existing = await this.repo.findOne(id)
-    if (!existing)
-      throw new HttpException(
-        `Failed, the ${this.name} with ${id} does not exist`,
-        404,
-      )
     return existing
   }
   async findAll(): Promise<T[]> {
