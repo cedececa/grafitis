@@ -63,7 +63,7 @@ export class CommonController<Entity, Service extends CommonService<Entity>> {
       code: 200,
       message: message,
       data: data,
+      succeed: data ? true : false,
     }
   }
-
 }
