@@ -12,4 +12,18 @@ export class PublicacionService extends CommonService<PublicacionEntity> {
   ) {
     super(repo, 'publicacion')
   }
+  async getPublicacionDetallada(publicacionId: number) {
+    const queryBuilder = this.repo.createQueryBuilder('publicacion')
+    const publicacionDetallada = await queryBuilder
+      .leftJoin('publicacion.fotos', 'fotos')
+      .leftJoin('publicacion.usuario', 'usuario')
+      .leftJoin('usuario.perfil', 'perfil')
+      .where('publicacion.id = :publicacionId', {
+        publicacionId,
+      })
+      //seleccionamos los datos que queremos
+      .select(['fotos.url', 'publicacion', 'usuario.id', 'perfil'])
+      .getMany()
+    return publicacionDetallada
+  }
 }
