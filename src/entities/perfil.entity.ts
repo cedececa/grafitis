@@ -1,23 +1,23 @@
-import { Column, Entity, OneToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm'
 import { CommonEntity } from './common.entity'
 import { UsuarioEntity } from './usuario.entity'
 
 @Entity('perfil')
 export class PerfilEntity extends CommonEntity {
   @OneToOne(() => UsuarioEntity, (usuario) => usuario.perfil, {
-    nullable: true,
-    cascade: true,
+    onDelete: 'CASCADE',
   })
+  @JoinColumn()
   usuario: UsuarioEntity
 
   @Column({ nullable: true })
   avatarUrl: string
-  @Column()
+  @Column({ nullable: true })
   apellido: string
-  @Column()
-  apeliidoSedundo: string
-  @Column()
+  @Column({ nullable: true })
+  apellidoSedundo: string
+  @Column({ nullable: true })
   nombre: string
-  @Column()
+  @Column({ nullable: true })
   fechaNacimiento: string
 }

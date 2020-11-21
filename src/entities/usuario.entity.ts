@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm'
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm'
 import { ComentarioEntity } from './comentario.entity'
 import { CommonEntity } from './common.entity'
 import { PerfilEntity } from './perfil.entity'
@@ -16,9 +16,17 @@ export class UsuarioEntity extends CommonEntity {
 
   // Relaciones
   @OneToOne(() => PerfilEntity, (perfil) => perfil.usuario, {
-    onDelete: 'CASCADE',
+    // use repository save for nested object, dont use [insert] if you have [cascade] enable.
+    cascade: true,
+
+    /**
+     * https://github.com/typeorm/typeorm/blob/master/docs/relations.md
+     cascade: boolean | ("insert" | "update")[] - If set to true, 
+     the related object will be inserted and updated in the database. 
+     You can also specify an array of cascade options.
+    */
+    onDelete: 'CASCADE', // Adding the cascade to both sides
   })
-  @JoinColumn()
   perfil: PerfilEntity
 
   @OneToMany(() => ValoracionEntity, (valoracion) => valoracion.usuario, {
@@ -28,11 +36,13 @@ export class UsuarioEntity extends CommonEntity {
 
   @OneToMany(() => ComentarioEntity, (c) => c.usuario, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   comentarios: ComentarioEntity[]
 
   @OneToMany(() => PublicacionEntity, (p) => p.usuario, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   publicaciones: PublicacionEntity[]
 }
