@@ -54,4 +54,16 @@ export class CommonController<Entity, Service extends CommonService<Entity>> {
       succeed: r ? true : false,
     }
   }
+
+  @Get()
+  async findAll(): Promise<Result> {
+    const data = await this.service.findAll()
+    const message = `Found all ${this.name} successfully`
+    return {
+      code: 200,
+      message: message,
+      data: data,
+    }
+  }
+
 }

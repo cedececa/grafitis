@@ -1,6 +1,6 @@
 import { Controller, Inject } from '@nestjs/common'
-import { ComentarioEntity } from 'src/entities/Comentario.entity'
-import { ComentarioService } from 'src/services/Comentario/Comentario.service'
+import { ComentarioEntity } from 'src/entities/comentario.entity'
+import { ComentarioService } from 'src/services/comentario/comentario.service'
 import { CommonController } from '../common.controller'
 
 const name = 'Comentario'

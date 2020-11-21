@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { PerfilEntity } from 'src/entities/Perfil.entity'
+import { PerfilEntity } from 'src/entities/perfil.entity'
 import { Repository } from 'typeorm'
 import { CommonService } from '../common.service'
 
