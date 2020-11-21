@@ -9,7 +9,9 @@ export class ComentarioController extends CommonController<
   ComentarioEntity,
   ComentarioService
 > {
-  constructor(@Inject(ComentarioService) service: ComentarioService) {
-    super(service, name)
+  constructor(
+    @Inject(ComentarioService) private comentarioService: ComentarioService,
+  ) {
+    super(comentarioService, name)
   }
 }

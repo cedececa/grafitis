@@ -9,7 +9,7 @@ export class PerfilController extends CommonController<
   PerfilEntity,
   PerfilService
 > {
-  constructor(@Inject(PerfilService) service: PerfilService) {
-    super(service, name)
+  constructor(@Inject(PerfilService) private perfilService: PerfilService) {
+    super(perfilService, name)
   }
 }

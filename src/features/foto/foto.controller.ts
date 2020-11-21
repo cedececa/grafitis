@@ -6,7 +6,7 @@ import { CommonController } from '../common.controller'
 const name = 'Foto'
 @Controller(name)
 export class FotoController extends CommonController<FotoEntity, FotoService> {
-  constructor(@Inject(FotoService) service: FotoService) {
-    super(service, name)
+  constructor(@Inject(FotoService) private fotoService: FotoService) {
+    super(fotoService, name)
   }
 }
