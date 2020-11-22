@@ -93,6 +93,17 @@ export class UsuarioController extends CommonController<
     }
   }
 
+  @Get(':idUsuario/grafitis')
+  async getAllGrafitis(@Param('idUsuario') idUsuario: number): Promise<Result> {
+    const r = await this.usuarioService.getAllGrafitisByUsuario(idUsuario)
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
+    }
+  }
+
   @Get(':idUsuario/grafitis/:idGrafitis')
   async getOneGrafitis(
     @Param('idUsuario') idUsuario: number,
