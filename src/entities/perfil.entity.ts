@@ -15,7 +15,7 @@ export class PerfilEntity extends CommonEntity {
   @Column({ nullable: true })
   apellido: string
   @Column({ nullable: true })
-  apellidoSedundo: string
+  apellidoSegundo: string
   @Column({ nullable: true })
   nombre: string
   @Column({ nullable: true })
