@@ -19,7 +19,7 @@ export class PublicacionController extends CommonController<
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Result> {
+  async getPublicacionDetallada(@Param('id') id: number): Promise<Result> {
     const r = await this.publicacionService.getPublicacionDetallada(id)
     return {
       code: 200,
