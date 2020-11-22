@@ -23,7 +23,7 @@ export class PublicacionService extends CommonService<PublicacionEntity> {
       })
       //seleccionamos los datos que queremos
       .select(['fotos.url', 'publicacion', 'usuario.id', 'perfil'])
-      .getMany()
+      .getOne()
     return publicacionDetallada
   }
 }
