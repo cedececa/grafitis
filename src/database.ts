@@ -7,9 +7,9 @@ export default TypeOrmModule.forRoot({
   port: 3306,
   username: 'root',
   password: 'Zx171260225!',
-  database: 'grafitis',
+  database: 'iw',
   entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
-  synchronize: false,
+  synchronize: true,
   logging: [, /* 'query' */ 'error' /* 'debug' */],
   /*   logger: 'debug',
    */
