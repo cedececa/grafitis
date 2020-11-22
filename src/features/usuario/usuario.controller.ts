@@ -15,6 +15,9 @@ import { CommonController } from '../common.controller'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
 import { PerfilService } from 'src/services/perfil/perfil.service'
 import { PerfilEntity } from 'src/entities/perfil.entity'
+import { ComentarioService } from 'src/services/comentario/comentario.service'
+import { ResponseHandler } from 'src/common/response.handler'
+import { ValoracionService } from 'src/services/valoracion/valoracion.service'
 
 const name = 'usuario'
 @Controller(name)
@@ -25,6 +28,8 @@ export class UsuarioController extends CommonController<
   constructor(
     @Inject(UsuarioService) private usuarioService: UsuarioService,
     @Inject(PerfilService) private servicePerfil: PerfilService,
+    @Inject(ComentarioService) private comentarioService: ComentarioService,
+    @Inject(ValoracionService) private valoracionService: ValoracionService,
   ) {
     super(usuarioService, name)
   }
@@ -132,5 +137,46 @@ export class UsuarioController extends CommonController<
       data: r,
       succeed: r ? true : false,
     }
+  }
+
+  // Comentario
+  @Get(':idUsuario/comentario')
+  async getComentariosDeUsuario(@Param('idUsuario') idUsuario: number) {
+    const r = await this.comentarioService.getComentariosByIdUsuario(idUsuario)
+    return ResponseHandler.JSON(r)
+  }
+
+  // Comentario
+  @Delete(':idUsuario/comentario/:idComentario')
+  async deleteOneComentariosDeUsuario(
+    @Param('idUsuario') idUsuario: number,
+    @Param('idComentario') idComentario: number,
+  ) {
+    const r = await this.comentarioService.deleteOneComentarioByIdUsuario(
+      idUsuario,
+      idComentario,
+    )
+    return ResponseHandler.JSON(r)
+  }
+
+  // Valoracion
+  @Get(':idUsuario/valoracion')
+  async getValoracionesDeUsuario(
+    @Param('idUsuario') idUsuario: number,
+  ): Promise<Result> {
+    const r = await this.valoracionService.getValoracionsByIdUsuario(idUsuario)
+    return ResponseHandler.JSON(r)
+  }
+  // Valoracion
+  @Get(':idUsuario/valoracion/:idValoracion')
+  async getOneValoracionByUsuarioAndValoracion(
+    @Param('idUsuario') idUsuario: number,
+    @Param('idValoracion') idValoracion: number,
+  ): Promise<Result> {
+    const r = await this.valoracionService.getValoracionsByIdUsuarioAndIdValoracion(
+      idUsuario,
+      idValoracion,
+    )
+    return ResponseHandler.JSON(r)
   }
 }

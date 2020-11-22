@@ -10,5 +10,7 @@ export default TypeOrmModule.forRoot({
   database: 'grafitis',
   entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
   synchronize: false,
-  logger: 'debug',
+  logging: [, /* 'query' */ 'error' /* 'debug' */],
+  /*   logger: 'debug',
+   */
 })
