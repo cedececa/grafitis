@@ -107,4 +107,16 @@ export class UsuarioService extends CommonService<UsuarioEntity> {
       .select(['usuario.id', 'publicacion'])
       .getOne()
   }
+  async getAllGrafitisByUsuario(idUsuario: number) {
+    const queryBuilder = this.repoPublicacion.createQueryBuilder('publicacion')
+    return await queryBuilder
+
+      .leftJoin('publicacion.usuario', 'usuario')
+      .where('usuario.Id = :idUsuario', {
+        idUsuario,
+      })
+      //selecionamos los datos que queremos
+      .select(['usuario.id', 'publicacion'])
+      .getMany()
+  }
 }
