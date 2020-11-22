@@ -33,4 +33,32 @@ export class ComentarioService extends CommonService<ComentarioEntity> {
       .getMany()
     return comentarios
   }
+
+  async getComentariosByIdUsuario(idUsuario: number) {
+    const queryBuilder = this.repo.createQueryBuilder('comentario')
+    return await queryBuilder
+      .leftJoin('comentario.usuario', 'usuario')
+      .leftJoin('comentario.publicacion', 'publicacion')
+      .where('usuario.id = :idUsuario', {
+        idUsuario,
+      })
+      //seleccionamos los datos que queremos
+      .select(['comentario', 'publicacion.id', 'usuario.id'])
+      .getMany()
+  }
+  async deleteOneComentarioByIdUsuario(
+    idUsuario: number,
+    idComentario: number,
+  ) {
+    const queryBuilder = this.repo.createQueryBuilder('comentario')
+    const r = await queryBuilder
+      .leftJoin('comentario.usuario', 'usuario')
+      .where('usuario.id = :idUsuario', {
+        idUsuario,
+      })
+      .andWhere('comentario.id = :idComentario', { idComentario })
+      .delete()
+      .execute()
+    return r.affected > 0 ? true : false
+  }
 }
