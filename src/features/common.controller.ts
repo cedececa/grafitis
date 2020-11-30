@@ -1,4 +1,4 @@
-import { Body, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { Result } from 'src/common/result.interface'
 import { CommonService } from 'src/services/common.service'
 
@@ -7,7 +7,28 @@ export class CommonController<Entity, Service extends CommonService<Entity>> {
     this.service = service
     this.name = name
   }
-
+  @Get('/page') //for admin app
+  async getPage(
+    @Query('page') page = 0,
+    @Query('limit') limit = 10,
+    @Query('sort') sort = 'createdAt',
+    @Query('order') order: 'DESC' | 'ASC' = 'ASC',
+    @Query('searchKey') searchKey = '',
+    @Query('searchValue') searchValue = '',
+  ) {
+    limit = limit > 40 ? 40 : limit
+    return {
+      code: 200,
+      message: '',
+      data: await this.service.paginate(
+        { page, limit, route: this.name },
+        sort,
+        order,
+        searchKey,
+        searchValue,
+      ),
+    }
+  }
   @Post()
   async save(@Body() createInput: Entity): Promise<Result> {
     const r = await this.service.save(createInput)
@@ -24,6 +45,7 @@ export class CommonController<Entity, Service extends CommonService<Entity>> {
     @Param('id') id: number,
     @Body() updateInput: Entity,
   ): Promise<Result> {
+    console.log(updateInput)
     const r = await this.service.update(id, updateInput)
     return {
       code: 200,
@@ -58,7 +80,7 @@ export class CommonController<Entity, Service extends CommonService<Entity>> {
   @Get()
   async findAll(): Promise<Result> {
     const data = await this.service.findAll()
-    const message = `Found all ${this.name} successfully`
+    const message = ''
     return {
       code: 200,
       message: message,
