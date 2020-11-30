@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common'
 import { Result } from 'src/common/result.interface'
 import { UsuarioEntity } from 'src/entities/usuario.entity'
@@ -33,18 +34,52 @@ export class UsuarioController extends CommonController<
   ) {
     super(usuarioService, name)
   }
-  /* 
-  Example - override
-  @Post() // overrides the base method
+
+  //Example - override
+  /*   @Post() // overrides the base method
   async save(@Body() createInput: UsuarioEntity): Promise<Result> {
     const r = await this.usuarioService.insert(createInput)
+    return ResponseHandler.JSON(r)
+  } */
+
+  @Get('/page') //for admin app
+  async getPage(
+    @Query('page') page = 0,
+    @Query('limit') limit = 10,
+    @Query('sort') sort = 'createdAt',
+    @Query('order') order: 'DESC' | 'ASC' = 'ASC',
+    @Query('searchKey') searchKey = '',
+    @Query('searchValue') searchValue = '',
+  ) {
+    limit = limit > 40 ? 40 : limit
     return {
       code: 200,
       message: '',
-      data: r,
-      succeed: r ? true : false,
+      data: await this.usuarioService.paginate(
+        { page, limit, route: 'usuario' },
+        sort,
+        order,
+        searchKey,
+        searchValue,
+      ),
     }
-  } */
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateInput: UsuarioEntity,
+  ): Promise<Result> {
+    const r = await this.usuarioService.save(updateInput)
+    console.log(r)
+    return ResponseHandler.JSON(r)
+  }
+
+  @Get(':id') // overrides the base method
+  async getOne(@Param('id') id: number): Promise<Result> {
+    const r = await this.usuarioService.getUsuarioInDetailById(id)
+    return ResponseHandler.JSON(r)
+  }
 
   @Post(':idUsuario/grafitis')
   async createNewGrafitis(
