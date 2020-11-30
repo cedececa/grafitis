@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 
-export class CommonEntity {
+export abstract class CommonEntity {
   @BeforeInsert()
   updateDateCreation() {
     this.createdAt = new Date()
