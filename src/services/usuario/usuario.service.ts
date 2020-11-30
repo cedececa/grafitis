@@ -16,6 +16,19 @@ export class UsuarioService extends CommonService<UsuarioEntity> {
     super(repo, 'usuario')
   }
 
+  async getUsuarioInDetailById(idUsuario: number | string) {
+    const queryBuilder = this.repo.createQueryBuilder('usuario')
+    return await queryBuilder
+
+      .leftJoin('usuario.perfil', 'perfil')
+      .where('usuario.id = :idUsuario', {
+        idUsuario,
+      })
+      //selecionamos los datos que queremos
+      .select(['usuario', 'perfil'])
+      .getOne()
+  }
+
   async createNewGrafitis(idUsuario: number, createInput: PublicacionEntity) {
     //const usuario = await this.findOneById(idUsuario)
     const usuario = await this.repo.findOne({
