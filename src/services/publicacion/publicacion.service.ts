@@ -12,6 +12,14 @@ export class PublicacionService extends CommonService<PublicacionEntity> {
   ) {
     super(repo, 'publicacion')
   }
+
+  async customUpdate(id: number, updateInput: PublicacionEntity) {
+    let r = await this.repo.save(updateInput)
+    if (r) {
+      r = await this.getPublicacionDetallada(r.id)
+    }
+    return r
+  }
   async getPublicacionDetallada(publicacionId: number) {
     const queryBuilder = this.repo.createQueryBuilder('publicacion')
     const publicacionDetallada = await queryBuilder

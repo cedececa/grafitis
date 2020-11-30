@@ -1,4 +1,13 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Put,
+  Query,
+} from '@nestjs/common'
+import { ResponseHandler } from 'src/common/response.handler'
 import { Result } from 'src/common/result.interface'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
 import { ComentarioService } from 'src/services/comentario/comentario.service'
@@ -17,7 +26,40 @@ export class PublicacionController extends CommonController<
   ) {
     super(publicacionService, name)
   }
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateInput: PublicacionEntity,
+  ): Promise<Result> {
+    //const r = await this.publicacionService.save(updateInput)
+    const r = await this.publicacionService.customUpdate(id, updateInput)
 
+    console.log(r)
+
+    return ResponseHandler.JSON(r)
+  }
+  @Get('/page') //for admin app
+  async getPage(
+    @Query('page') page = 0,
+    @Query('limit') limit = 10,
+    @Query('sort') sort = 'createdAt',
+    @Query('order') order: 'DESC' | 'ASC' = 'ASC',
+    @Query('searchKey') searchKey = '',
+    @Query('searchValue') searchValue = '',
+  ) {
+    limit = limit > 40 ? 40 : limit
+    return {
+      code: 200,
+      message: '',
+      data: await this.publicacionService.paginate(
+        { page, limit, route: name },
+        sort,
+        order,
+        searchKey,
+        searchValue,
+      ),
+    }
+  }
   @Get(':id')
   async getPublicacionDetallada(@Param('id') id: number): Promise<Result> {
     const r = await this.publicacionService.getPublicacionDetallada(id)
