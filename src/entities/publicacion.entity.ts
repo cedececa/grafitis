@@ -1,11 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { ComentarioEntity } from './comentario.entity'
 import { CommonEntity } from './common.entity'
 import { FotoEntity } from './foto.entity'
