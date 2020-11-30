@@ -1,3 +1,8 @@
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate'
 import { Repository } from 'typeorm'
 
 export class CommonService<T> {
@@ -47,5 +52,28 @@ export class CommonService<T> {
   }
   async findAll(): Promise<T[]> {
     return await this.repo.find()
+  }
+
+  async paginate(
+    options: IPaginationOptions,
+    sort: string,
+    order: 'DESC' | 'ASC',
+    searchKey = '',
+    searchValue = '',
+  ): Promise<Pagination<T>> {
+    const queryBuilder = this.repo.createQueryBuilder(this.name)
+
+    if (searchKey.localeCompare('createdAt') == 0) {
+      queryBuilder.where(`${this.name}.createdAt >= :searchValue `, {
+        searchValue: searchValue,
+      })
+    }
+    if (searchKey.localeCompare('id') == 0) {
+      queryBuilder.where(`LOWER(${this.name}.id) LIKE LOWER(:searchValue)`, {
+        searchValue: `%${searchValue}%`,
+      })
+    }
+    queryBuilder.orderBy(`${this.name}.${sort}`, order)
+    return await paginate<T>(queryBuilder, options)
   }
 }
