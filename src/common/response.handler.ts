@@ -1,3 +1,4 @@
+import { HttpException, HttpStatus } from '@nestjs/common'
 import { Result } from './result.interface'
 
 export class ResponseHandler {
@@ -8,5 +9,19 @@ export class ResponseHandler {
       data: object,
       succeed: object || object instanceof Array ? true : false,
     }
+  }
+  static HttpException(
+    data: any = null,
+    errorMessage = '',
+    status: HttpStatus = HttpStatus.OK,
+  ) {
+    throw new HttpException(
+      {
+        status: status,
+        message: errorMessage,
+        data: data,
+      },
+      status,
+    )
   }
 }

@@ -7,24 +7,23 @@ import { ValoracionEntity } from './valoracion.entity'
 
 @Entity('usuario')
 export class UsuarioEntity extends CommonEntity {
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 'user' })
   role: string
   @Column()
-  claveHash: string
+  password: string
   @Column()
-  correo: string
+  email: string
 
   // Relaciones
-  @OneToOne(() => PerfilEntity, (perfil) => perfil.usuario, {
-    // use repository save for nested object, dont use [insert] if you have [cascade] enable.
-    cascade: true,
-
-    /**
+  /**
      * https://github.com/typeorm/typeorm/blob/master/docs/relations.md
      cascade: boolean | ("insert" | "update")[] - If set to true, 
      the related object will be inserted and updated in the database. 
      You can also specify an array of cascade options.
     */
+  @OneToOne(() => PerfilEntity, (perfil) => perfil.usuario, {
+    // use repository save for nested object, dont use [insert] if you have [cascade] enable.
+    cascade: true,
     onDelete: 'CASCADE', // Adding the cascade to both sides
   })
   perfil: PerfilEntity

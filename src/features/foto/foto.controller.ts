@@ -1,12 +1,30 @@
-import { Controller, Inject } from '@nestjs/common'
-import { FotoEntity } from 'src/entities/foto.entity'
-import { FotoService } from 'src/services/foto/foto.service'
-import { CommonController } from '../common.controller'
+import {
+  Controller,
+  HttpStatus,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ResponseHandler } from 'src/common/response.handler'
+import { FotoService } from './foto.service'
+@Controller('foto')
+export class FotoController {
+  constructor(private fotoService: FotoService) {}
 
-const name = 'Foto'
-@Controller(name)
-export class FotoController extends CommonController<FotoEntity, FotoService> {
-  constructor(@Inject(FotoService) private fotoService: FotoService) {
-    super(fotoService, name)
+  @Post('')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      dest: './images-uploaded',
+    }),
+  )
+  uploadFile(@UploadedFile() file) {
+    return ResponseHandler.JSON(
+      {
+        name: file.filename,
+      },
+      '',
+      HttpStatus.CREATED,
+    )
   }
 }

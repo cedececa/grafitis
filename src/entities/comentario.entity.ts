@@ -5,7 +5,7 @@ import { UsuarioEntity } from './usuario.entity'
 
 @Entity('comentario')
 export class ComentarioEntity extends CommonEntity {
-  @Column({ nullable: true })
+  @Column({ nullable: true, length:1000})
   contenido: string
 
   @ManyToOne(() => UsuarioEntity, (u) => u.comentarios, {

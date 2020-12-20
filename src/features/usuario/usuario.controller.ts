@@ -19,6 +19,7 @@ import { PerfilEntity } from 'src/entities/perfil.entity'
 import { ComentarioService } from 'src/services/comentario/comentario.service'
 import { ResponseHandler } from 'src/common/response.handler'
 import { ValoracionService } from 'src/services/valoracion/valoracion.service'
+import { User } from 'src/core/decorators/user.route.decorator'
 
 const name = 'usuario'
 @Controller(name)
@@ -75,12 +76,20 @@ export class UsuarioController extends CommonController<
     return ResponseHandler.JSON(r)
   }
 
-  @Get(':id') // overrides the base method
-  async getOne(@Param('id') id: number): Promise<Result> {
-    const r = await this.usuarioService.getUsuarioInDetailById(id)
-    return ResponseHandler.JSON(r)
+  @Post('grafitis')
+  async createNewGrafitis2(
+    @User() user: UsuarioEntity,
+    @Body() createInput: PublicacionEntity,
+  ): Promise<Result> {
+    createInput.usuario = user
+    const created = await this.usuarioService.createNewGrafitis2(createInput)
+    return {
+      code: 200,
+      message: '',
+      data: created,
+      succeed: created ? true : false,
+    }
   }
-
   @Post(':idUsuario/grafitis')
   async createNewGrafitis(
     @Param('idUsuario') id: number,
@@ -94,7 +103,19 @@ export class UsuarioController extends CommonController<
       succeed: created ? true : false,
     }
   }
-
+  @Delete('grafitis/:idGrafitis')
+  async deleteOneGrafitis2(
+    @User() user: UsuarioEntity,
+    @Param('idGrafitis') idGrafitis: number,
+  ): Promise<Result> {
+    const r = await this.usuarioService.deleteOneGrafitis(user.id, idGrafitis)
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
+    }
+  }
   @Delete(':idUsuario/grafitis/:idGrafitis')
   async deleteOneGrafitis(
     @Param('idUsuario') idUsuario: number,
@@ -108,7 +129,24 @@ export class UsuarioController extends CommonController<
       succeed: r ? true : false,
     }
   }
-
+  @Put('grafitis/:idGrafitis')
+  async updateOneGrafitis2(
+    @User() user: UsuarioEntity,
+    @Param('idGrafitis') idGrafitis: number,
+    @Body() updateObject: PublicacionEntity,
+  ): Promise<Result> {
+    const r = await this.usuarioService.updateOneGrafitis(
+      user.id,
+      idGrafitis,
+      updateObject,
+    )
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
+    }
+  }
   @Put(':idUsuario/grafitis/:idGrafitis')
   async updateOneGrafitis(
     @Param('idUsuario') idUsuario: number,
@@ -126,6 +164,21 @@ export class UsuarioController extends CommonController<
       data: r,
       succeed: r ? true : false,
     }
+  }
+  @Get('grafitis')
+  async getMisGrafitis(@User() user: UsuarioEntity): Promise<Result> {
+    const r = await this.usuarioService.getAllGrafitisByUsuario(user.id)
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
+    }
+  }
+  @Get(':id') // overrides the base method
+  async getOne(@Param('id') id: number): Promise<Result> {
+    const r = await this.usuarioService.getUsuarioInDetailById(id)
+    return ResponseHandler.JSON(r)
   }
 
   @Get(':idUsuario/grafitis')

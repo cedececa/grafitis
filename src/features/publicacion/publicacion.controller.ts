@@ -4,11 +4,13 @@ import {
   Get,
   Inject,
   Param,
+  Post,
   Put,
   Query,
 } from '@nestjs/common'
 import { ResponseHandler } from 'src/common/response.handler'
 import { Result } from 'src/common/result.interface'
+import { ComentarioEntity } from 'src/entities/comentario.entity'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
 import { ComentarioService } from 'src/services/comentario/comentario.service'
 import { PublicacionService } from 'src/services/publicacion/publicacion.service'
@@ -60,6 +62,20 @@ export class PublicacionController extends CommonController<
       ),
     }
   }
+
+  @Get('autor/:autor')
+  async getPublicacionesByAutor(
+    @Param('autor') autor: string,
+  ): Promise<Result> {
+    const r = await this.publicacionService.getPublicacionesByAutor(autor)
+    return {
+      code: 200,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
+    }
+  }
+
   @Get(':id')
   async getPublicacionDetallada(@Param('id') id: number): Promise<Result> {
     const r = await this.publicacionService.getPublicacionDetallada(id)
@@ -76,6 +92,24 @@ export class PublicacionController extends CommonController<
     @Param('idPublicacion') idPub,
   ): Promise<Result> {
     const r = await this.comentarioService.getManyByPublicacionId(idPub)
+    return {
+      code: r ? 200 : 204,
+      message: '',
+      data: r,
+      succeed: r ? true : false,
+    }
+  }
+  @Post(':idPublicacion/:idUsuario')
+  async comment(
+    @Param('idPublicacion') idPub: number,
+    @Param('idUsuario') idUsuario: number,
+    @Body() updateInput: ComentarioEntity,
+  ): Promise<Result> {
+    const r = await this.comentarioService.commentByUser(
+      idPub,
+      idUsuario,
+      updateInput,
+    )
     return {
       code: r ? 200 : 204,
       message: '',

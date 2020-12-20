@@ -1,13 +1,10 @@
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { FotoEntity } from 'src/entities/foto.entity'
-import { FotoService } from 'src/services/foto/foto.service'
-import { FotoController } from './foto.controller'
+import { Module } from '@nestjs/common';
+import { FotoController } from './foto.controller';
+import { FotoService } from './foto.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FotoEntity])],
   controllers: [FotoController],
-  providers: [FotoService],
-  exports: [FotoService],
+  
+  providers: [FotoService]
 })
 export class FotoModule {}

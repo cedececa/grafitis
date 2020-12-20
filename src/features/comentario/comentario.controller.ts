@@ -14,4 +14,5 @@ export class ComentarioController extends CommonController<
   ) {
     super(comentarioService, name)
   }
+  
 }

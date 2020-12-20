@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
 import { UsuarioEntity } from 'src/entities/usuario.entity'
@@ -12,8 +12,8 @@ import { UsuarioController } from './usuario.controller'
   imports: [
     TypeOrmModule.forFeature([UsuarioEntity, PublicacionEntity]),
     PerfilModule,
-    ComentarioModule,
     ValoracionModule,
+    forwardRef(() => ComentarioModule),
   ],
   controllers: [UsuarioController],
   providers: [UsuarioService],

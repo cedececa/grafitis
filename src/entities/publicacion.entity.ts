@@ -1,7 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { ComentarioEntity } from './comentario.entity'
 import { CommonEntity } from './common.entity'
-import { FotoEntity } from './foto.entity'
 import { UsuarioEntity } from './usuario.entity'
 import { ValoracionEntity } from './valoracion.entity'
 
@@ -14,7 +13,13 @@ export class PublicacionEntity extends CommonEntity {
   tematica: string
 
   @Column({ nullable: true })
-  ubicacion: string
+  ubicacion: number
+
+  @Column({ type: 'double', nullable: true })
+  latitud: number
+
+  @Column({ type: 'double', nullable: true })
+  longitud: string
 
   @Column({ nullable: true })
   estado: string
@@ -44,8 +49,6 @@ export class PublicacionEntity extends CommonEntity {
   })
   comentarios: ComentarioEntity[]
 
-  @OneToMany(() => FotoEntity, (f) => f.publicacion, {
-    nullable: true,
-  })
-  fotos: FotoEntity[]
+  @Column({ nullable: true })
+  foto: string
 }

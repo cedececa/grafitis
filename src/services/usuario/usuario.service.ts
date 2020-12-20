@@ -28,7 +28,9 @@ export class UsuarioService extends CommonService<UsuarioEntity> {
       .select(['usuario', 'perfil'])
       .getOne()
   }
-
+  async createNewGrafitis2(createInput: PublicacionEntity) {
+    return await this.repoPublicacion.save(createInput)
+  }
   async createNewGrafitis(idUsuario: number, createInput: PublicacionEntity) {
     //const usuario = await this.findOneById(idUsuario)
     const usuario = await this.repo.findOne({
@@ -131,5 +133,16 @@ export class UsuarioService extends CommonService<UsuarioEntity> {
       //selecionamos los datos que queremos
       .select(['usuario.id', 'publicacion'])
       .getMany()
+  }
+
+  async findOneByEmail(email: string): Promise<UsuarioEntity> {
+    return await this.repo
+      .createQueryBuilder('usuario')
+      .where('usuario.email = :email', {
+        email: email,
+      })
+      .leftJoin('usuario.perfil', 'perfil')
+      .select(['usuario', 'perfil'])
+      .getOne()
   }
 }
