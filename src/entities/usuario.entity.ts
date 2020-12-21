@@ -3,16 +3,21 @@ import { ComentarioEntity } from './comentario.entity'
 import { CommonEntity } from './common.entity'
 import { PerfilEntity } from './perfil.entity'
 import { PublicacionEntity } from './publicacion.entity'
+import { UsuarioRole } from './usuario-role.enum'
+import { UsuarioTipo } from './usuario-tipo.enum'
 import { ValoracionEntity } from './valoracion.entity'
 
 @Entity('usuario')
 export class UsuarioEntity extends CommonEntity {
-  @Column({ nullable: true, default: 'user' })
-  role: string
-  @Column()
+  @Column({ type: 'varchar', nullable: true, default: UsuarioRole.User })
+  role: UsuarioRole
+  @Column({ nullable: true })
   password: string
   @Column()
   email: string
+
+  @Column({ type: 'varchar', nullable: true, default: UsuarioTipo.Local })
+  usuarioTipo: UsuarioTipo
 
   // Relaciones
   /**

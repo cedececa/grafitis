@@ -12,8 +12,6 @@ export class PublicacionEntity extends CommonEntity {
   @Column({ nullable: true })
   tematica: string
 
-  @Column({ nullable: true })
-  ubicacion: number
 
   @Column({ type: 'double', nullable: true })
   latitud: number
@@ -35,7 +33,6 @@ export class PublicacionEntity extends CommonEntity {
 
   @ManyToOne(() => UsuarioEntity, (u) => u.publicaciones, {
     nullable: true,
-    onDelete: 'CASCADE',
   })
   usuario: UsuarioEntity
 
