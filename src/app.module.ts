@@ -10,6 +10,8 @@ import { FotoModule } from './features/foto/foto.module'
 import { join } from 'path'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { AuthModule } from './core/auth/auth.module'
+import { APP_GUARD } from '@nestjs/core'
+import { RolesGuard } from './core/guards/roles.guard'
 @Module({
   imports: [
     DatabaseORM,
@@ -23,7 +25,8 @@ import { AuthModule } from './core/auth/auth.module'
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'images-uploaded'),
     }),
-    AuthModule
+    AuthModule,
   ],
+
 })
 export class AppModule {}

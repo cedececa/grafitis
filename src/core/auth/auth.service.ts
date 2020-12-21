@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { UsuarioTipo } from 'src/entities/usuario-tipo.enum'
 import { UsuarioEntity } from 'src/entities/usuario.entity'
 import { UsuarioService } from 'src/services/usuario/usuario.service'
 
@@ -29,6 +30,7 @@ export class AuthService {
     } */
     return null
   }
+
   login(user: any) {
     // TODO - disable multi tokens for one user
     const payload = user
@@ -38,5 +40,50 @@ export class AuthService {
   }
   private createToken(payload: { email: string }): string {
     return this.jwtService.sign(payload)
+  }
+
+  async googleLogin(req) {
+    if (!req.user) {
+      return null
+    }
+
+    // accesso correcto
+    let userInformationDevueltoPorGoogle = {
+      usuarioTipo: UsuarioTipo.Google,
+      email: req.user.email,
+      perfil: {
+        apellido: req.user.lastName,
+        nombre: req.user.firstName,
+        avatarUrl: req.user.picture,
+      },
+      role: '',
+    }
+
+    let user = await this.userService.findOneByEmail(
+      userInformationDevueltoPorGoogle.email,
+    )
+    // update or crear un user con el email devuelto por google
+    if (!user) {
+      await this.userService.save(
+        userInformationDevueltoPorGoogle as UsuarioEntity,
+      )
+      user = await this.userService.findOneByEmail(
+        userInformationDevueltoPorGoogle.email,
+      )
+    }
+
+    const {
+      password,
+      createdAt,
+      updatedAt,
+      ...result // descompone user (el objeto json) en varias variables
+    } = user
+
+    const payload = result
+    const token = this.createToken(payload)
+    //console.log(token)
+    //console.log(payload)
+
+    return token
   }
 }
