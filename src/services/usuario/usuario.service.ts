@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
 import { UsuarioEntity } from 'src/entities/usuario.entity'
 import { Repository } from 'typeorm'
@@ -14,6 +19,32 @@ export class UsuarioService extends CommonService<UsuarioEntity> {
     private readonly repoPublicacion: Repository<PublicacionEntity>,
   ) {
     super(repo, 'usuario')
+  }
+
+  async paginate(
+    options: IPaginationOptions,
+    sort: string,
+    order: 'DESC' | 'ASC',
+    searchKey = '',
+    searchValue = '',
+  ): Promise<Pagination<UsuarioEntity>> {
+    const queryBuilder = this.repo.createQueryBuilder('usuario')
+
+    if (searchKey.localeCompare('createdAt') == 0) {
+      queryBuilder.where(`usuario.createdAt >= :searchValue `, {
+        searchValue: searchValue,
+      })
+    }
+    if (searchKey.localeCompare('id') == 0) {
+      queryBuilder.where(`LOWER(usuario.id) LIKE LOWER(:searchValue)`, {
+        searchValue: `%${searchValue}%`,
+      })
+    }
+    queryBuilder
+      .leftJoin('usuario.perfil', 'perfil')
+      .select(['usuario', 'perfil'])
+      .orderBy(`usuario.${sort}`, order)
+    return await paginate<UsuarioEntity>(queryBuilder, options)
   }
 
   async getUsuarioInDetailById(idUsuario: number | string) {
