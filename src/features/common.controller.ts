@@ -1,8 +1,9 @@
 import { Body, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { Result } from 'src/common/result.interface'
+import { CommonEntity } from 'src/entities/common.entity'
 import { CommonService } from 'src/services/common.service'
 
-export class CommonController<Entity, Service extends CommonService<Entity>> {
+export class CommonController<Entity extends CommonEntity, Service extends CommonService<Entity>> {
   constructor(private service: Service, private name: string) {
     this.service = service
     this.name = name
@@ -45,7 +46,10 @@ export class CommonController<Entity, Service extends CommonService<Entity>> {
     @Param('id') id: number,
     @Body() updateInput: Entity,
   ): Promise<Result> {
-    console.log(updateInput)
+
+    const existing = await this.service.findOneById(updateInput.id)
+    updateInput.createdAt = existing.createdAt
+    updateInput.updatedAt = new Date()
     const r = await this.service.update(id, updateInput)
     return {
       code: 200,
