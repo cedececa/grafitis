@@ -8,14 +8,16 @@ import { JwtStrategy } from './jwt.strategy'
 import { LocalStrategy } from './local.strategy'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import { JwtModule } from '@nestjs/jwt'
+import { GoogleStrategy } from './google.strategy'
+import { RolesGuard } from '../guards/roles.guard'
 
 @Module({
   imports: [
     UsuarioModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1d' }
-     }),
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   controllers: [AuthController],
   providers: [
@@ -27,6 +29,12 @@ import { JwtModule } from '@nestjs/jwt'
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    GoogleStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    // order matters
   ],
   exports: [AuthService], // 导出 AuthServie 供 UserModule 使用
 })
