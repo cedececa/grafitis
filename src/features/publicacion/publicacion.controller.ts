@@ -10,8 +10,10 @@ import {
 } from '@nestjs/common'
 import { ResponseHandler } from 'src/common/response.handler'
 import { Result } from 'src/common/result.interface'
+import { Roles } from 'src/core/decorators/roles.decorator'
 import { ComentarioEntity } from 'src/entities/comentario.entity'
 import { PublicacionEntity } from 'src/entities/publicacion.entity'
+import { UsuarioRole } from 'src/entities/usuario-role.enum'
 import { ComentarioService } from 'src/services/comentario/comentario.service'
 import { PublicacionService } from 'src/services/publicacion/publicacion.service'
 import { CommonController } from '../common.controller'
@@ -28,6 +30,18 @@ export class PublicacionController extends CommonController<
   ) {
     super(publicacionService, name)
   }
+  @Get()
+  @Roles(UsuarioRole.User)
+  async findAll(): Promise<Result> {
+    const data = await this.publicacionService.findAll()
+    const message = ''
+    return {
+      code: 200,
+      message: message,
+      data: data,
+      succeed: data ? true : false,
+    }
+  }
   @Put(':id')
   async update(
     @Param('id') id: number,
@@ -36,7 +50,6 @@ export class PublicacionController extends CommonController<
     //const r = await this.publicacionService.save(updateInput)
     const r = await this.publicacionService.customUpdate(id, updateInput)
 
-    console.log(r)
 
     return ResponseHandler.JSON(r)
   }
@@ -64,6 +77,8 @@ export class PublicacionController extends CommonController<
   }
 
   @Get('autor/:autor')
+  @Roles(UsuarioRole.User)
+
   async getPublicacionesByAutor(
     @Param('autor') autor: string,
   ): Promise<Result> {
@@ -88,6 +103,7 @@ export class PublicacionController extends CommonController<
   }
 
   @Get(':idPublicacion/comentario')
+  @Roles(UsuarioRole.User)
   async getComentariosByIdPublicacion(
     @Param('idPublicacion') idPub,
   ): Promise<Result> {
@@ -100,6 +116,7 @@ export class PublicacionController extends CommonController<
     }
   }
   @Post(':idPublicacion/:idUsuario')
+  @Roles(UsuarioRole.User)
   async comment(
     @Param('idPublicacion') idPub: number,
     @Param('idUsuario') idUsuario: number,

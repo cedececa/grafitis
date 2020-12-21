@@ -20,6 +20,9 @@ import { ComentarioService } from 'src/services/comentario/comentario.service'
 import { ResponseHandler } from 'src/common/response.handler'
 import { ValoracionService } from 'src/services/valoracion/valoracion.service'
 import { User } from 'src/core/decorators/user.route.decorator'
+import { Roles } from 'src/core/decorators/roles.decorator'
+import { UsuarioRole } from 'src/entities/usuario-role.enum'
+import { exit } from 'process'
 
 const name = 'usuario'
 @Controller(name)
@@ -71,13 +74,18 @@ export class UsuarioController extends CommonController<
     @Param('id') id: number,
     @Body() updateInput: UsuarioEntity,
   ): Promise<Result> {
+
+    const existing = await this.usuarioService.findOneById(updateInput.id)
+    updateInput.createdAt = existing.createdAt
+    updateInput.updatedAt = new Date()
+
     const r = await this.usuarioService.save(updateInput)
-    console.log(r)
     return ResponseHandler.JSON(r)
   }
 
   @Post('grafitis')
-  async createNewGrafitis2(
+  @Roles(UsuarioRole.User)
+  async createNewGrafitisForUsuario(
     @User() user: UsuarioEntity,
     @Body() createInput: PublicacionEntity,
   ): Promise<Result> {
@@ -104,6 +112,7 @@ export class UsuarioController extends CommonController<
     }
   }
   @Delete('grafitis/:idGrafitis')
+  @Roles(UsuarioRole.User)
   async deleteOneGrafitis2(
     @User() user: UsuarioEntity,
     @Param('idGrafitis') idGrafitis: number,
@@ -130,6 +139,7 @@ export class UsuarioController extends CommonController<
     }
   }
   @Put('grafitis/:idGrafitis')
+  @Roles(UsuarioRole.User)
   async updateOneGrafitis2(
     @User() user: UsuarioEntity,
     @Param('idGrafitis') idGrafitis: number,
@@ -166,6 +176,7 @@ export class UsuarioController extends CommonController<
     }
   }
   @Get('grafitis')
+  @Roles(UsuarioRole.User)
   async getMisGrafitis(@User() user: UsuarioEntity): Promise<Result> {
     const r = await this.usuarioService.getAllGrafitisByUsuario(user.id)
     return {
