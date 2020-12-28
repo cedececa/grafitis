@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { UsuarioRole } from 'src/entities/usuario-role.enum'
 import { UsuarioTipo } from 'src/entities/usuario-tipo.enum'
 import { UsuarioEntity } from 'src/entities/usuario.entity'
 import { UsuarioService } from 'src/services/usuario/usuario.service'
@@ -56,7 +57,7 @@ export class AuthService {
         nombre: req.user.firstName,
         avatarUrl: req.user.picture,
       },
-      role: '',
+      role: UsuarioRole.User,
     }
 
     let user = await this.userService.findOneByEmail(
