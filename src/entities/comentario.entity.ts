@@ -16,6 +16,7 @@ export class ComentarioEntity extends CommonEntity {
 
   @ManyToOne(() => PublicacionEntity, (p) => p.comentarios, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   publicacion: PublicacionEntity
 }

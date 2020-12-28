@@ -40,13 +40,11 @@ export class UsuarioEntity extends CommonEntity {
 
   @OneToMany(() => ComentarioEntity, (c) => c.usuario, {
     nullable: true,
-    onDelete: 'CASCADE',
   })
   comentarios: ComentarioEntity[]
 
   @OneToMany(() => PublicacionEntity, (p) => p.usuario, {
     nullable: true,
-    onDelete: 'CASCADE',
   })
   publicaciones: PublicacionEntity[]
 }

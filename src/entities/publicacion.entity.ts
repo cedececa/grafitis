@@ -33,6 +33,7 @@ export class PublicacionEntity extends CommonEntity {
 
   @ManyToOne(() => UsuarioEntity, (u) => u.publicaciones, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   usuario: UsuarioEntity
 
