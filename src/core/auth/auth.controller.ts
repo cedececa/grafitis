@@ -53,9 +53,9 @@ export class AuthController {
   async oogleAuthRedirect(@Req() req, @Res() res) {
     const token = await this.authService.googleLogin(req)
     if (token != null) {
-      return res.redirect(`http://localhost:4200/#/google-login-success/${token}`)
+      return res.redirect(`http://practica4.platorico.com/#/google-login-success/${token}`)
     } else {
-      return res.redirect(`http://localhost:4200/#/google-login-failure`)
+      return res.redirect(`http://practica4.platorico.com/#/google-login-failure`)
     }
     //return ResponseHandler.JSON( await this.authService.googleLogin(req))
   }

@@ -23,7 +23,7 @@ import { RolesGuard } from './core/guards/roles.guard'
     ExternalServicesModule,
     FotoModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'images-uploaded'),
+      rootPath: join(__dirname, './', 'images-uploaded'),
     }),
     AuthModule,
   ],
